@@ -24,9 +24,13 @@
 
 @end
 
-NSString * const appId = @"<app id>";
-NSString * const appKey = @"<app key>";
-NSString * const appSecret = @"<secret key>";
+//NSString * const appId = @"<app id>";
+//NSString * const appKey = @"<app key>";
+//NSString * const appSecret = @"<secret key>";
+
+NSString * const appId = @"163022336";
+NSString * const appKey = @"CBAHIILKABABABABA";
+NSString * const appSecret = @"1BAD0F30A9A5502340BC02B5";
 
 @implementation FriendsViewController
 
@@ -128,13 +132,15 @@ NSString * const appSecret = @"<secret key>";
     [self presentViewController:viewController animated:YES completion:nil];
 }
 
+- (void)okWillDismissAuthorizeControllerByCancel:(BOOL)canceled {
+    NSLog(@"autorization canceled by user");
+}
+
+
 /*
 * Method will be called after success login ([_api authorize:])
 * Метод будет вызван после успешной авторизации ([_api authorize:])
 */
-
-
-
 - (void)okDidLogin {
     self.sessionStatusLabel.text = @"Logged in";
     [self.authButton setTitle:@"Logout" forState:UIControlStateNormal];

@@ -75,7 +75,7 @@ NSString * const appSecret = @"<secret key>";
 #pragma mark - Helpers
 
 + (PSAppDelegate *)appDelegate {
-    return [UIApplication sharedApplication].delegate;
+    return (PSAppDelegate *)[UIApplication sharedApplication].delegate;
 }
 
 - (UINavigationController *)rootNavigationController {

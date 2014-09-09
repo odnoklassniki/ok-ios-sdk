@@ -13,12 +13,15 @@
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, assign) BOOL finished;
 @property (nonatomic, strong) NSURLRequest *request;
+
+@property (nonatomic, weak) id<OKSessionDelegate> delegate;
 @end
 
 @implementation OKAuthorizeController
 
-+ (UIViewController *)authorizeControllerWithAppId:(NSString *)appId authorizationUrl:(NSURL *)authorizationUrl {
++ (UIViewController *)authorizeControllerWithAppId:(NSString *)appId authorizationUrl:(NSURL *)authorizationUrl delegate:(id<OKSessionDelegate>)delegate {
     OKAuthorizeController *ac = [[OKAuthorizeController alloc] initWithAppId:appId authorizationUrl:authorizationUrl];
+    ac.delegate = delegate;
 
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:ac];
 
@@ -55,7 +58,7 @@
 
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
-                                                                                          action:@selector(dismiss)];
+                                                                                          action:@selector(cancel)];
 
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -73,7 +76,7 @@
 
     if ([request.URL.scheme isEqualToString:self.redirectUrlScheme]) {
         if ([[OKSession activeSession] handleOpenURL:request.URL]) {
-            [self dismiss];
+            [self dismissByCancel:NO];
             return NO;
         }
     }
@@ -98,7 +101,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == alertView.cancelButtonIndex) {
-        [self dismiss];
+        [self cancel];
     } else {
         [self.webView loadRequest:self.request];
     }
@@ -106,16 +109,25 @@
 
 #pragma mark - Actions
 
-- (void)dismiss {
+- (void)cancel {
+    [self dismissByCancel:YES];
+}
+
+- (void)dismissByCancel:(BOOL)byCancel {
     self.finished = YES;
 
     if (self.navigationController.isBeingDismissed)
         return;
+
     if (!self.navigationController.isBeingPresented) {
+        if ([self.delegate respondsToSelector:@selector(okWillDismissAuthorizeControllerByCancel:)]) {
+            [self.delegate okWillDismissAuthorizeControllerByCancel:byCancel];
+        }
+
         [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
     } else {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(300 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^(void) {
-            [self dismiss];
+            [self dismissByCancel:byCancel];
         });
     }
 }

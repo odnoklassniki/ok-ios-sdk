@@ -148,7 +148,9 @@ static OKSession *_activeSession = nil;
     if (inApp) {
         params[@"layout"] = @"a";
         authorizeUrl = [NSURL URLWithString:[OKRequest serializeURL:kLoginURL params:params]];
-        UIViewController *ac = [OKAuthorizeController authorizeControllerWithAppId:self.appId authorizationUrl:authorizeUrl];
+        UIViewController *ac = [OKAuthorizeController authorizeControllerWithAppId:self.appId
+                                                                  authorizationUrl:authorizeUrl
+                                                                          delegate:self.delegate];
         [self.delegate okShouldPresentAuthorizeController:ac];
     } else {
         params[@"layout"] = @"m";

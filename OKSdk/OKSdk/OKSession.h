@@ -10,6 +10,8 @@ extern NSString * const kAPIBaseURL;
 @protocol OKSessionDelegate<NSObject>
 - (void)okShouldPresentAuthorizeController:(UIViewController *)viewController;
 @optional
+- (void)okWillDismissAuthorizeControllerByCancel:(BOOL)canceled;
+
 - (void)okDidLogin;
 - (void)okDidNotLogin:(BOOL)canceled;
 - (void)okDidNotLoginWithError:(NSError *)error;
