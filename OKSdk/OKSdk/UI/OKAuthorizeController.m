@@ -2,6 +2,8 @@
 #import "OKAuthorizeController.h"
 #import "OKSession.h"
 
+#define OKColor [UIColor colorWithRed:0xED/255.f green:0x81/255.f blue:0x2B/255.f alpha:1.f]
+
 @interface OKAuthorizeController()<UIAlertViewDelegate>
 @property (nonatomic, strong) NSURL *authorizationUrl;
 @property (nonatomic, copy) NSString *appId;
@@ -21,9 +23,11 @@
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:ac];
 
     if ([nc.navigationBar respondsToSelector:@selector(barTintColor)]) {
-        nc.navigationBar.barTintColor = [UIColor orangeColor];
+        nc.navigationBar.barTintColor = OKColor;
         nc.navigationBar.tintColor = [UIColor whiteColor];
         nc.navigationBar.translucent = YES;
+    } else {
+        nc.navigationBar.tintColor = OKColor;
     }
     nc.navigationBar.titleTextAttributes = @{UITextAttributeTextColor : [UIColor whiteColor]};
 
@@ -60,12 +64,6 @@
 
     NSURLRequest *request = [NSURLRequest requestWithURL:self.authorizationUrl];
     [self.webView loadRequest:request];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-
-    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 #pragma mark - UIWebViewDelegate
