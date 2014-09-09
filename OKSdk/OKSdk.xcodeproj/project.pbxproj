@@ -1,0 +1,325 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		15C39A1819BDCDC600985A9F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C39A1719BDCDC600985A9F /* Foundation.framework */; };
+		15C39A4119BDD5FC00985A9F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C39A4019BDD5FC00985A9F /* UIKit.framework */; };
+		6C9E8211B2EB490A03CD21F4 /* NSString+OKUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E8EEA19FD321DC97339CA /* NSString+OKUtils.m */; };
+		6C9E8701237063DFE68BDAF2 /* OKSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E8511A31F0559DA4B8304 /* OKSession.m */; };
+		6C9E8723A2BEBE190E4B9BF4 /* OKRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E830E4C51F64EDEA46FB6 /* OKRequest.m */; };
+		6C9E87F2C54AE09ADF5279DC /* OKAuthorizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E83C51366C6A79C6DBE18 /* OKAuthorizeController.m */; };
+		6C9E8BF45874D40AFCCAEC8E /* Odnoklassniki.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E839B59E6EE9A768E5F45 /* Odnoklassniki.m */; };
+		6C9E8CACF3A8C0BE987055E2 /* OKShareWidgetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E8A19E76CE397B7C4146B /* OKShareWidgetViewController.m */; };
+		6C9E8F49FE81836C4B7E2578 /* OKFriends.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E8E8E7CE416FD11ACE5FB /* OKFriends.m */; };
+		6C9E8FBB644441EA67096DA6 /* OKTokenCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E8146C3DC0BC59B68EC43 /* OKTokenCache.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		15C39A1219BDCDC600985A9F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		15C39A1419BDCDC600985A9F /* libOKSdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOKSdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		15C39A1719BDCDC600985A9F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		15C39A4019BDD5FC00985A9F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6C9E8146C3DC0BC59B68EC43 /* OKTokenCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OKTokenCache.m; sourceTree = "<group>"; };
+		6C9E82E9FB97E9B1101A4731 /* OKSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKSession.h; sourceTree = "<group>"; };
+		6C9E830E4C51F64EDEA46FB6 /* OKRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OKRequest.m; sourceTree = "<group>"; };
+		6C9E839B59E6EE9A768E5F45 /* Odnoklassniki.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Odnoklassniki.m; sourceTree = "<group>"; };
+		6C9E83C51366C6A79C6DBE18 /* OKAuthorizeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OKAuthorizeController.m; sourceTree = "<group>"; };
+		6C9E84061F66668565ADD30E /* NSString+OKUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+OKUtils.h"; sourceTree = "<group>"; };
+		6C9E8511A31F0559DA4B8304 /* OKSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OKSession.m; sourceTree = "<group>"; };
+		6C9E889CE1E27E9976CDA0F3 /* OKTokenCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKTokenCache.h; sourceTree = "<group>"; };
+		6C9E88BBFE47BA5CB25F5CE8 /* OKRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKRequest.h; sourceTree = "<group>"; };
+		6C9E8A19E76CE397B7C4146B /* OKShareWidgetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OKShareWidgetViewController.m; sourceTree = "<group>"; };
+		6C9E8CB8C3897E55426DCE3B /* OKShareWidgetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKShareWidgetViewController.h; sourceTree = "<group>"; };
+		6C9E8D59CE20DA831B3AF93A /* OKAuthorizeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKAuthorizeController.h; sourceTree = "<group>"; };
+		6C9E8D7F5BA5FBA74FB5F3ED /* OKFriends.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKFriends.h; sourceTree = "<group>"; };
+		6C9E8DE425A0B882FB5F023C /* Odnoklassniki.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Odnoklassniki.h; sourceTree = "<group>"; };
+		6C9E8E8E7CE416FD11ACE5FB /* OKFriends.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OKFriends.m; sourceTree = "<group>"; };
+		6C9E8EEA19FD321DC97339CA /* NSString+OKUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+OKUtils.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		15C39A1119BDCDC600985A9F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				15C39A4119BDD5FC00985A9F /* UIKit.framework in Frameworks */,
+				15C39A1819BDCDC600985A9F /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		15C39A0B19BDCDC600985A9F = {
+			isa = PBXGroup;
+			children = (
+				15C39A1919BDCDC600985A9F /* OKSdk */,
+				15C39A1619BDCDC600985A9F /* Frameworks */,
+				15C39A1519BDCDC600985A9F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		15C39A1519BDCDC600985A9F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				15C39A1419BDCDC600985A9F /* libOKSdk.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		15C39A1619BDCDC600985A9F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				15C39A4019BDD5FC00985A9F /* UIKit.framework */,
+				15C39A1719BDCDC600985A9F /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		15C39A1919BDCDC600985A9F /* OKSdk */ = {
+			isa = PBXGroup;
+			children = (
+				6C9E800E969781DAC3B5EE65 /* Friends */,
+				6C9E8813C337465DEB1F807C /* Utils */,
+				6C9E8DE425A0B882FB5F023C /* Odnoklassniki.h */,
+				6C9E839B59E6EE9A768E5F45 /* Odnoklassniki.m */,
+				6C9E88BBFE47BA5CB25F5CE8 /* OKRequest.h */,
+				6C9E830E4C51F64EDEA46FB6 /* OKRequest.m */,
+				6C9E82E9FB97E9B1101A4731 /* OKSession.h */,
+				6C9E8511A31F0559DA4B8304 /* OKSession.m */,
+				6C9E889CE1E27E9976CDA0F3 /* OKTokenCache.h */,
+				6C9E8146C3DC0BC59B68EC43 /* OKTokenCache.m */,
+				6C9E81C6AD8BCC1582EDE00E /* UI */,
+			);
+			path = OKSdk;
+			sourceTree = "<group>";
+		};
+		6C9E800E969781DAC3B5EE65 /* Friends */ = {
+			isa = PBXGroup;
+			children = (
+				6C9E8D7F5BA5FBA74FB5F3ED /* OKFriends.h */,
+				6C9E8E8E7CE416FD11ACE5FB /* OKFriends.m */,
+			);
+			path = Friends;
+			sourceTree = "<group>";
+		};
+		6C9E81C6AD8BCC1582EDE00E /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				6C9E8D59CE20DA831B3AF93A /* OKAuthorizeController.h */,
+				6C9E83C51366C6A79C6DBE18 /* OKAuthorizeController.m */,
+				6C9E8A19E76CE397B7C4146B /* OKShareWidgetViewController.m */,
+				6C9E8CB8C3897E55426DCE3B /* OKShareWidgetViewController.h */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		6C9E8813C337465DEB1F807C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				6C9E84061F66668565ADD30E /* NSString+OKUtils.h */,
+				6C9E8EEA19FD321DC97339CA /* NSString+OKUtils.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		15C39A1319BDCDC600985A9F /* OKSdk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 15C39A3719BDCDC600985A9F /* Build configuration list for PBXNativeTarget "OKSdk" */;
+			buildPhases = (
+				15C39A1019BDCDC600985A9F /* Sources */,
+				15C39A1119BDCDC600985A9F /* Frameworks */,
+				15C39A1219BDCDC600985A9F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OKSdk;
+			productName = OKSdk;
+			productReference = 15C39A1419BDCDC600985A9F /* libOKSdk.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		15C39A0C19BDCDC600985A9F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Odnoklassniki;
+			};
+			buildConfigurationList = 15C39A0F19BDCDC600985A9F /* Build configuration list for PBXProject "OKSdk" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 15C39A0B19BDCDC600985A9F;
+			productRefGroup = 15C39A1519BDCDC600985A9F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				15C39A1319BDCDC600985A9F /* OKSdk */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		15C39A1019BDCDC600985A9F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6C9E8211B2EB490A03CD21F4 /* NSString+OKUtils.m in Sources */,
+				6C9E8BF45874D40AFCCAEC8E /* Odnoklassniki.m in Sources */,
+				6C9E8723A2BEBE190E4B9BF4 /* OKRequest.m in Sources */,
+				6C9E8701237063DFE68BDAF2 /* OKSession.m in Sources */,
+				6C9E8FBB644441EA67096DA6 /* OKTokenCache.m in Sources */,
+				6C9E8F49FE81836C4B7E2578 /* OKFriends.m in Sources */,
+				6C9E87F2C54AE09ADF5279DC /* OKAuthorizeController.m in Sources */,
+				6C9E8CACF3A8C0BE987055E2 /* OKShareWidgetViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		15C39A3519BDCDC600985A9F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		15C39A3619BDCDC600985A9F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		15C39A3819BDCDC600985A9F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/OKSdk.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		15C39A3919BDCDC600985A9F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/OKSdk.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		15C39A0F19BDCDC600985A9F /* Build configuration list for PBXProject "OKSdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				15C39A3519BDCDC600985A9F /* Debug */,
+				15C39A3619BDCDC600985A9F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		15C39A3719BDCDC600985A9F /* Build configuration list for PBXNativeTarget "OKSdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				15C39A3819BDCDC600985A9F /* Debug */,
+				15C39A3919BDCDC600985A9F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 15C39A0C19BDCDC600985A9F /* Project object */;
+}
