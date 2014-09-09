@@ -14,7 +14,7 @@
 		6C9E8723A2BEBE190E4B9BF4 /* OKRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E830E4C51F64EDEA46FB6 /* OKRequest.m */; };
 		6C9E87F2C54AE09ADF5279DC /* OKAuthorizeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E83C51366C6A79C6DBE18 /* OKAuthorizeController.m */; };
 		6C9E8BF45874D40AFCCAEC8E /* Odnoklassniki.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E839B59E6EE9A768E5F45 /* Odnoklassniki.m */; };
-		6C9E8CACF3A8C0BE987055E2 /* OKShareWidgetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E8A19E76CE397B7C4146B /* OKShareWidgetViewController.m */; };
+		6C9E8CACF3A8C0BE987055E2 /* OKMediaTopicPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E8A19E76CE397B7C4146B /* OKMediaTopicPostViewController.m */; };
 		6C9E8F49FE81836C4B7E2578 /* OKFriends.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E8E8E7CE416FD11ACE5FB /* OKFriends.m */; };
 		6C9E8FBB644441EA67096DA6 /* OKTokenCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E8146C3DC0BC59B68EC43 /* OKTokenCache.m */; };
 /* End PBXBuildFile section */
@@ -44,8 +44,8 @@
 		6C9E8511A31F0559DA4B8304 /* OKSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OKSession.m; sourceTree = "<group>"; };
 		6C9E889CE1E27E9976CDA0F3 /* OKTokenCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKTokenCache.h; sourceTree = "<group>"; };
 		6C9E88BBFE47BA5CB25F5CE8 /* OKRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKRequest.h; sourceTree = "<group>"; };
-		6C9E8A19E76CE397B7C4146B /* OKShareWidgetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OKShareWidgetViewController.m; sourceTree = "<group>"; };
-		6C9E8CB8C3897E55426DCE3B /* OKShareWidgetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKShareWidgetViewController.h; sourceTree = "<group>"; };
+		6C9E8A19E76CE397B7C4146B /* OKMediaTopicPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OKMediaTopicPostViewController.m; sourceTree = "<group>"; };
+		6C9E8CB8C3897E55426DCE3B /* OKMediaTopicPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKMediaTopicPostViewController.h; sourceTree = "<group>"; };
 		6C9E8D59CE20DA831B3AF93A /* OKAuthorizeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKAuthorizeController.h; sourceTree = "<group>"; };
 		6C9E8D7F5BA5FBA74FB5F3ED /* OKFriends.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OKFriends.h; sourceTree = "<group>"; };
 		6C9E8DE425A0B882FB5F023C /* Odnoklassniki.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Odnoklassniki.h; sourceTree = "<group>"; };
@@ -124,8 +124,8 @@
 			children = (
 				6C9E8D59CE20DA831B3AF93A /* OKAuthorizeController.h */,
 				6C9E83C51366C6A79C6DBE18 /* OKAuthorizeController.m */,
-				6C9E8A19E76CE397B7C4146B /* OKShareWidgetViewController.m */,
-				6C9E8CB8C3897E55426DCE3B /* OKShareWidgetViewController.h */,
+				6C9E8A19E76CE397B7C4146B /* OKMediaTopicPostViewController.m */,
+				6C9E8CB8C3897E55426DCE3B /* OKMediaTopicPostViewController.h */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -197,7 +197,7 @@
 				6C9E8FBB644441EA67096DA6 /* OKTokenCache.m in Sources */,
 				6C9E8F49FE81836C4B7E2578 /* OKFriends.m in Sources */,
 				6C9E87F2C54AE09ADF5279DC /* OKAuthorizeController.m in Sources */,
-				6C9E8CACF3A8C0BE987055E2 /* OKShareWidgetViewController.m in Sources */,
+				6C9E8CACF3A8C0BE987055E2 /* OKMediaTopicPostViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,9 +8,9 @@ extern NSString * const kAccessTokenURL;
 extern NSString * const kAPIBaseURL;
 
 @protocol OKSessionDelegate<NSObject>
+- (void)okShouldPresentAuthorizeController:(UIViewController *)viewController;
 @optional
 - (void)okDidLogin;
-- (void)okShouldPresentViewController:(UIViewController *)viewController;
 - (void)okDidNotLogin:(BOOL)canceled;
 - (void)okDidNotLoginWithError:(NSError *)error;
 - (void)okDidExtendToken:(NSString *)accessToken;

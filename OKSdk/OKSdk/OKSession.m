@@ -134,27 +134,26 @@ static OKSession *_activeSession = nil;
         params[@"scope"] = [self.permissions componentsJoinedByString:@";"];
     }
 
-    NSURL *authorizeUrl = nil;
+    UIApplication *app = [UIApplication sharedApplication];
 
-    if (inApp && [self.delegate respondsToSelector:@selector(okShouldPresentViewController:)]) {
+    NSURL *authorizeUrl = nil;
+// todo
+//    NSURL *authorizeUrl = [NSURL URLWithString:[OKRequest serializeURL:OKAppAuthBaseURL params:params]];
+//    if ([app canOpenURL:authorizeUrl]) {
+//        if ([app openURL:authorizeUrl]) {
+//            return;
+//        }
+//    }
+
+    if (inApp) {
         params[@"layout"] = @"a";
         authorizeUrl = [NSURL URLWithString:[OKRequest serializeURL:kLoginURL params:params]];
         UIViewController *ac = [OKAuthorizeController authorizeControllerWithAppId:self.appId authorizationUrl:authorizeUrl];
-        [self.delegate okShouldPresentViewController:ac];
+        [self.delegate okShouldPresentAuthorizeController:ac];
     } else {
-        UIApplication *app = [UIApplication sharedApplication];
-
-        authorizeUrl = [NSURL URLWithString:[OKRequest serializeURL:OKAppAuthBaseURL params:params]];
-        BOOL didAuthWithOKApp = NO;
-
-        if ([app canOpenURL:authorizeUrl]) {
-            didAuthWithOKApp = [app openURL:authorizeUrl];
-        }
-        if (!didAuthWithOKApp) {
-            params[@"layout"] = @"m";
-            authorizeUrl = [NSURL URLWithString:[OKRequest serializeURL:kLoginURL params:params]];
-            [app openURL:authorizeUrl];
-        }
+        params[@"layout"] = @"m";
+        authorizeUrl = [NSURL URLWithString:[OKRequest serializeURL:kLoginURL params:params]];
+        [app openURL:authorizeUrl];
     }
 }
 

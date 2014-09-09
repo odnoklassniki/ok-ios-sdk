@@ -33,14 +33,14 @@ NSString * const appSecret = @"<secret key>";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.queue = [NSOperationQueue new];
+    [self.queue setMaxConcurrentOperationCount:8];
+
     [self.authButton addTarget:self action:@selector(loginButtonClick:) forControlEvents:UIControlEventTouchDown];
 
     // API initialization
     // инициализация API
 	self.api = [[Odnoklassniki alloc] initWithAppId:appId appSecret:appSecret appKey:appKey delegate:self];
-
-    self.queue = [NSOperationQueue new];
-    [self.queue setMaxConcurrentOperationCount:8];
 
     // if access_token is valid
     // если access_token действителен
@@ -124,7 +124,7 @@ NSString * const appSecret = @"<secret key>";
 
 #pragma mark - Odnoklassniki Delegate methods
 
-- (void)okShouldPresentViewController:(UIViewController *)viewController {
+- (void)okShouldPresentAuthorizeController:(UIViewController *)viewController {
     [self presentViewController:viewController animated:YES completion:nil];
 }
 
