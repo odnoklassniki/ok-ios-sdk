@@ -24,13 +24,9 @@
 
 @end
 
-//NSString * const appId = @"<app id>";
-//NSString * const appKey = @"<app key>";
-//NSString * const appSecret = @"<secret key>";
-
-NSString * const appId = @"163022336";
-NSString * const appKey = @"CBAHIILKABABABABA";
-NSString * const appSecret = @"1BAD0F30A9A5502340BC02B5";
+NSString * const appId = @"<app id>";
+NSString * const appKey = @"<app key>";
+NSString * const appSecret = @"<secret key>";
 
 @implementation FriendsViewController
 
