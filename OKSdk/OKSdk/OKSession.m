@@ -136,14 +136,13 @@ static OKSession *_activeSession = nil;
 
     UIApplication *app = [UIApplication sharedApplication];
 
-    NSURL *authorizeUrl = nil;
-// todo
-//    NSURL *authorizeUrl = [NSURL URLWithString:[OKRequest serializeURL:OKAppAuthBaseURL params:params]];
-//    if ([app canOpenURL:authorizeUrl]) {
-//        if ([app openURL:authorizeUrl]) {
-//            return;
-//        }
-//    }
+    NSURL *authorizeUrl = [NSURL URLWithString:[OKRequest serializeURL:OKAppAuthBaseURL params:params]];
+    NSURL *callbackUrl = [NSURL URLWithString:[self appBaseUrl]];
+    if ([app canOpenURL:authorizeUrl] && [app canOpenURL:callbackUrl]) {
+        if ([app openURL:authorizeUrl]) {
+            return;
+        }
+    }
 
     if (inApp) {
         params[@"layout"] = @"a";
