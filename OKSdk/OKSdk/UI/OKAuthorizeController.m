@@ -75,8 +75,10 @@
     self.request = request;
 
     if ([request.URL.scheme isEqualToString:self.redirectUrlScheme]) {
-        if ([[OKSession activeSession] handleOpenURL:request.URL]) {
-            [self dismissByCancel:NO];
+        if ([[OKSession activeSession] canHandleOpenURL:request.URL]) {
+            [self dismissByCancel:NO completion:^{
+                [[OKSession activeSession] handleOpenURL:request.URL];
+            }];
             return NO;
         }
     }
@@ -114,6 +116,10 @@
 }
 
 - (void)dismissByCancel:(BOOL)byCancel {
+    [self dismissByCancel:byCancel completion:nil];
+}
+
+- (void)dismissByCancel:(BOOL)byCancel completion:(void (^)(void))completion {
     self.finished = YES;
 
     if (self.navigationController.isBeingDismissed)
@@ -124,10 +130,10 @@
             [self.delegate okWillDismissAuthorizeControllerByCancel:byCancel];
         }
 
-        [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+        [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:completion];
     } else {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(300 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^(void) {
-            [self dismissByCancel:byCancel];
+            [self dismissByCancel:byCancel completion:completion];
         });
     }
 }

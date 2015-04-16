@@ -45,6 +45,7 @@ extern NSString * const kAPIBaseURL;
 
 - (void)refreshAuthToken;
 
+- (BOOL)canHandleOpenURL:(NSURL*)url;
 - (BOOL)handleOpenURL:(NSURL*)url;
 - (void)close;
 
