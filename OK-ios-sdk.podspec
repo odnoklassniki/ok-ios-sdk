@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = { "Ivanov Denis" => "denis.ivanov@odnoklassniki.ru" }
   s.platform     = :ios, "7.0"
-  s.source       = { :git => "https://github.com/apiok/ok-ios-sdk.git", :branch => "master" }
+  s.source       = { :git => "https://github.com/apiok/ok-ios-sdk.git", :tag => s.version.to_s }
   s.source_files = "OKSdk", "OKSdk/**/*.{h,m}"
   s.public_header_files = "OKSdk/**/*.h"
   s.requires_arc = true
