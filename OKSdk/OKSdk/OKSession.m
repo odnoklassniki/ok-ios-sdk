@@ -72,12 +72,19 @@ static OKSession *_activeSession = nil;
     return self;
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url {
-	if (![[url absoluteString] hasPrefix:self.appBaseUrl]) {
-		NSLog(@"wrong prefix = %@, %@", [url absoluteString], self.appBaseUrl);
-		return NO;
-	}
+- (BOOL)canHandleOpenURL:(NSURL *)url {
+    if (![[url absoluteString] hasPrefix:self.appBaseUrl]) {
+        NSLog(@"wrong prefix = %@, %@", [url absoluteString], self.appBaseUrl);
+        return NO;
+    }
+    return YES;
+}
 
+- (BOOL)handleOpenURL:(NSURL *)url {
+    if (![self canHandleOpenURL:url]) {
+        return NO;
+    }
+    
 	NSDictionary *params = [url.query dictionaryByParsingURLQueryPart];
 
 	if ([params valueForKey:@"error"] != nil) {
