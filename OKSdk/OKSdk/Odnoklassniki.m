@@ -73,7 +73,7 @@
 
     NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
     for (NSHTTPCookie *cookie in cookies) {
-        if (NSNotFound != [cookie.domain rangeOfString:@"odnoklassniki.ru"].location) {
+        if (NSNotFound != [cookie.domain rangeOfString:@"odnoklassniki.ru"].location || NSNotFound != [cookie.domain rangeOfString:@"ok.ru"].location) {
             [[NSHTTPCookieStorage sharedHTTPCookieStorage]
                                   deleteCookie:cookie];
         }
