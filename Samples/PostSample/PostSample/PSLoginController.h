@@ -1,3 +1,0 @@
-
-@interface PSLoginController : UIViewController
-@end

@@ -1,3 +1,0 @@
-
-@interface PSPostViewController : UIViewController
-@end
