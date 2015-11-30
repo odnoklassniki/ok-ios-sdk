@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name         = "OK-ios-sdk"
   s.version      = "1.0"
   s.summary      = "iOS library for working with Odnoklassniki API."
-  s.homepage     = "https://github.com/apiok/ok-ios-sdk"
+  s.homepage     = "https://github.com/apiok/ok-ios-sdk/tree/1.0"
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = { "Ivanov Denis" => "denis.ivanov@odnoklassniki.ru" }
   s.platform     = :ios, "7.0"
