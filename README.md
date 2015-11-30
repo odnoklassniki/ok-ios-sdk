@@ -1,6 +1,7 @@
-How to use
-==========
+###OK IOS SDK 2.0.0
+If you are looking for the old version, please checkout tag 1.0
 
+####How to use
 First you should select External and IOS platforms and enable Client OAuth authorization using ok.ru app edit form. 
 Also your should send request for LONG_ACCESS_TOKEN to [api-support](mailto:api-support@ok.ru) or you can simple not request for LONG_ACCESS_TOKEN permission during OAuth authorization.
 
