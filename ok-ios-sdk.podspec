@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.author       = { "Ivanov Denis" => "dmitriy.grytsovets@corp.mail.ru" }
   s.platform     = :ios, "7.0"
   s.source       = { :git => "https://github.com/apiok/ok-ios-sdk.git", :tag => s.version.to_s }
-  spec.source_files = '*.{h,m}'
+  s.source_files = '*.{h,m}'
   s.public_header_files = "*.h"
   s.requires_arc = true
 end
