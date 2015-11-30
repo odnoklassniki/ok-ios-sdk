@@ -1,9 +1,5 @@
-
-
-###OK IOS SDK 2.0.0
-If you are looking for the old version, please checkout tag 1.0
-
-####How to use
+How to use
+==========
 
 First you should select External and IOS platforms and enable Client OAuth authorization using ok.ru app edit form. 
 Also your should send request for LONG_ACCESS_TOKEN to [api-support](mailto:api-support@ok.ru) or you can simple not request for LONG_ACCESS_TOKEN permission during OAuth authorization.
@@ -20,10 +16,15 @@ Don't forget add ok{appId}://authorize to allowed redirect urls for your applica
 
 Add OKSDK.h and OKSDK.m to your project. For example you can use git submodule.
 
-Init your sdk with appId and appPublicKey in AppDelegate didFinishLaunchingWithOptions
+Init your sdk in AppDelegate didFinishLaunchingWithOptions
 ```objective-c
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [OKSDK initWithAppIdAndAppKey:[NSNumber numberWithUnsignedLongLong:12345] appKey:@"ABCABCABCABC"];
+    OKSDKInitSettings *settings = [OKSDKInitSettings new];
+    settings.appKey = @"ABCDEFGABCDEGF";
+    settings.appId = @"12345";
+    settings.webViewParent = self.window;
+    settings.webViewControlllerParent = self.window.rootViewController;
+    [OKSDK initWithSettings: settings];
     return YES;
 }
 ```
