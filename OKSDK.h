@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, OKSDKErrorCode) {
 @property (nonatomic, assign) NSString *appId;
 @property (nonatomic, assign) NSString *appKey;
 @property (nonatomic, assign) UIView *webViewParent;
-@property (nonatomic, assign) UIViewController *webViewControlllerParent;
+@property (nonatomic, assign) UIViewController *webViewControllerParent;
 @end
 
 @interface OKSDK : NSObject

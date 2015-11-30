@@ -254,7 +254,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
         dispatch_async(dispatch_get_main_queue(), ^{
             OKWebViewController *webViewController = [[OKWebViewController alloc] initWithErrorBlock:errorBlock];
             [self.settings.webViewParent addSubview:webViewController.view];
-            [self.settings.webViewControlllerParent addChildViewController:webViewController];
+            [self.settings.webViewControllerParent addChildViewController:webViewController];
             [webViewController loadUrl: url];
             [self.settings.webViewParent setNeedsDisplay];
             self.webViewController = webViewController;

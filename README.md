@@ -24,7 +24,7 @@ Init your sdk in AppDelegate didFinishLaunchingWithOptions
     settings.appKey = @"ABCDEFGABCDEGF";
     settings.appId = @"12345";
     settings.webViewParent = self.window;
-    settings.webViewControlllerParent = self.window.rootViewController;
+    settings.webViewControllerParent = self.window.rootViewController;
     [OKSDK initWithSettings: settings];
     return YES;
 }
