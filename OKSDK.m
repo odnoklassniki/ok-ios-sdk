@@ -6,9 +6,9 @@
 NSString *const OK_SDK_VERSION = @"2.0.0";
 NSTimeInterval const OK_REQUEST_TIMEOUT = 180.0;
 NSInteger const OK_MAX_CONCURRENT_REQUESTS = 3;
-NSString *const OK_OAUTH_URL = @"https://test.ok.ru/oauth/authorize";
-NSString *const OK_WIDGET_URL = @"https://test.ok.ru/dk?st.cmd=";
-NSString *const OK_API_URL = @"https://apitest.ok.ru/fb.do?";
+NSString *const OK_OAUTH_URL = @"https://connect.ok.ru/oauth/authorize";
+NSString *const OK_WIDGET_URL = @"https://connect.ok.ru/dk?st.cmd=";
+NSString *const OK_API_URL = @"https://api.ok.ru/fb.do?";
 NSString *const OK_OAUTH_APP_URL = @"okauth://authorize";
 NSString *const OK_USER_DEFS_ACCESS_TOKEN = @"ok_access_token";
 NSString *const OK_USER_DEFS_SECRET_KEY = @"ok_secret_key";
