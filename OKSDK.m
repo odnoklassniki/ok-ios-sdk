@@ -24,9 +24,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 @implementation NSString (OKConnection)
 
-
-
-- (NSString *) ok_md5 {
+-(NSString *) ok_md5 {
     const char *cStr = [self UTF8String];
     unsigned char digest[CC_MD5_DIGEST_LENGTH];
     CC_MD5( cStr, strlen(cStr), digest);
@@ -48,9 +46,11 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 -(NSString *) ok_decode {
     return [self stringByRemovingPercentEncoding];
 }
+
 @end
 
 @implementation NSURL (OKConnection)
+
 -(NSMutableDictionary *)ok_params {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     NSArray *pairs = [(self.fragment?self.fragment:self.query) componentsSeparatedByString:@"&"];
@@ -62,9 +62,11 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     }
     return result;
 }
+
 @end
 
 @implementation NSDictionary (OKConnection)
+
 -(NSError *)ok_error {
     if(self[@"error_code"]) {
         return [[NSError alloc] initWithDomain:OK_API_ERROR_CODE_DOMAIN code:[self[@"error_code"] intValue] userInfo:@{NSLocalizedDescriptionKey: self[@"error_msg"]}];
@@ -74,11 +76,13 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     }
     return nil;
 }
-- (NSDictionary *)ok_union: (NSDictionary *) dict {
+
+-(NSDictionary *)ok_union: (NSDictionary *) dict {
     NSMutableDictionary *dictionary =[[NSMutableDictionary alloc] initWithDictionary:self];
     [dictionary setValuesForKeysWithDictionary:dict];
     return dictionary;
 }
+
 -(NSString *)ok_queryStringWithSignature:(NSString *)secretKey sigName:(NSString *) sigName{
     NSMutableString *sigSource = [NSMutableString string];
     NSMutableString *queryString = [NSMutableString string];
@@ -98,6 +102,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     for (NSString *key in self) [queryString appendString:[NSString stringWithFormat:@"%@=%@&", [key ok_encode], [self[key] ok_encode]]];
     return queryString;
 }
+
 -(NSString *)ok_json:(NSError *)error {
     NSData *data = [NSJSONSerialization dataWithJSONObject:self options:0 error:&error ];
     return data?[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]:nil;
@@ -113,7 +118,10 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 @property(nonatomic,assign) BOOL loaded;
 @property(nonatomic,strong) OKErrorBlock errorBlock;
 
+-(void)cancelButtonClicked;
+
 -(void)cancel;
+
 @end
 
 
@@ -130,6 +138,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 @property(nonatomic,strong) NSString *sdkToken;
 
 @property(nonatomic,strong) NSMutableDictionary *completitionHandlers;
+
 @end
 
 
@@ -141,22 +150,23 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     }
     return self;
 }
+
 - (void)viewDidLoad {
     self.view.backgroundColor = OKColor;
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     CGFloat statusBarOffset = [UIApplication sharedApplication].isStatusBarHidden?0:20;
     UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0,statusBarOffset,self.view.bounds.size.width,self.view.bounds.size.height - statusBarOffset)];
     webView.delegate = self;
-    webView.backgroundColor = [UIColor lightGrayColor];
+    webView.backgroundColor = [UIColor whiteColor];
     webView.opaque = NO;
     webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc]
                                              initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-   
+    
     UIButton *cancelButton = [[UIButton alloc] init];
     [cancelButton.titleLabel setFont:[UIFont systemFontOfSize:30]];
-    [cancelButton addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchDown];
+    [cancelButton addTarget:self action:@selector(cancelButtonClicked) forControlEvents:UIControlEventTouchDown];
     [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     cancelButton.backgroundColor = OKColor;
     cancelButton.layer.cornerRadius = 5;
@@ -186,7 +196,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 - (void)loadUrl:(NSURL *)url {
     [self.webView loadRequest:[NSURLRequest requestWithURL: url cachePolicy:NSURLRequestReloadIgnoringCacheData
-                                                     timeoutInterval: OK_REQUEST_TIMEOUT]];
+                                           timeoutInterval: OK_REQUEST_TIMEOUT]];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -194,11 +204,15 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     return YES;
 }
 
+- (void)cancelButtonClicked{
+    [self cancel];
+    _errorBlock([NSError errorWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:OKSDKErrorCodeCancelledByUser userInfo:@{NSLocalizedDescriptionKey: @"Web view controller cancelled by user"}]);
+}
+
 -(void)cancel {
     __weak typeof(self) wSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[wSelf view] removeFromSuperview];
-        [wSelf removeFromParentViewController];
+        [self dismissViewControllerAnimated:true completion:nil];
     });
 }
 - (void)webViewDidStartLoad:(UIWebView *)webView {
@@ -262,10 +276,9 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             OKWebViewController *webViewController = [[OKWebViewController alloc] initWithErrorBlock:errorBlock];
-            [self.settings.webViewParent addSubview:webViewController.view];
-            [self.settings.webViewControllerParent addChildViewController:webViewController];
+            UIViewController* hostController = self.settings.contollerHandler();
+            [hostController presentViewController:webViewController animated:true completion:nil];
             [webViewController loadUrl: url];
-            [self.settings.webViewParent setNeedsDisplay];
             self.webViewController = webViewController;
         });
     }
@@ -285,7 +298,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 -(void)authorizeWithPermissions:(NSArray *)permissions success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
     if(self.accessToken && self.accessTokenSecretKey) {
-        return successBlock(nil);
+        return successBlock(@[self.accessToken, self.accessTokenSecretKey]);
     }
     UIApplication *app = [UIApplication sharedApplication];
     if (![app canOpenURL:[[NSURL alloc] initWithString:self.oauthRedirectUri]]) {
@@ -302,7 +315,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
             [userDefaults setObject: (wSelf.accessToken = data[@"access_token"]) forKey:OK_USER_DEFS_ACCESS_TOKEN];
             [userDefaults setObject: (wSelf.accessTokenSecretKey = data[@"session_secret_key"]) forKey:OK_USER_DEFS_SECRET_KEY];
             if(wSelf.accessToken || wSelf.accessTokenSecretKey) {
-                successBlock(nil);
+                successBlock(@[wSelf.accessToken, wSelf.accessTokenSecretKey]);
             } else {
                 errorBlock(error);
             }
@@ -358,6 +371,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     };
     [self openInWebview:[NSURL URLWithString:widgetUrl] success: successBlock error: errorBlock];
 }
+
 -(void)shutdown {
     [self.queue cancelAllOperations];
     [self.webViewController cancel];
@@ -371,6 +385,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     [userDefaults removeObjectForKey:OK_USER_DEFS_SECRET_KEY];
     
 }
+
 @end
 
 @implementation OKSDK
@@ -400,6 +415,7 @@ static OKConnection *connection;
         errorBlock([NSError errorWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:OKSDKErrorCodeNotIntialized userInfo:@{NSLocalizedDescriptionKey: OK_SDK_NOT_INIT_COMMON_ERROR}]);
     }
 }
+
 +(void)shutdown {
     [connection shutdown];
 }
@@ -416,7 +432,7 @@ static OKConnection *connection;
     if(connection && connection.sdkToken) {
         [connection invokeMethod:method arguments:[@{@"sdkToken":connection.sdkToken} ok_union: arguments] session:true signed: true success:successBlock error:errorBlock];
     } else {
-       errorBlock([NSError errorWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:OKSDKErrorCodeNotIntialized userInfo:@{NSLocalizedDescriptionKey: @"OKSDK not initialized you should call initWithAppIdAndAppKey and sdkInit first"}]);
+        errorBlock([NSError errorWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:OKSDKErrorCodeNotIntialized userInfo:@{NSLocalizedDescriptionKey: @"OKSDK not initialized you should call initWithAppIdAndAppKey and sdkInit first"}]);
     }
 }
 
@@ -437,11 +453,16 @@ static OKConnection *connection;
     }
 }
 
-
-
 +(void)clearAuth {
     [connection clearAuth];
 }
+
++ (NSString*) currentAccessToken{
+    if (connection){
+        return connection.accessToken;
+    }else{
+        return nil;
+    }
+}
+
 @end
-
-
