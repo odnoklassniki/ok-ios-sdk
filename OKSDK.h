@@ -17,10 +17,9 @@ typedef NS_ENUM(NSInteger, OKSDKErrorCode) {
 };
 
 @interface OKSDKInitSettings: NSObject
-@property (nonatomic, assign) NSString *appId;
-@property (nonatomic, assign) NSString *appKey;
-@property (nonatomic, assign) UIView *webViewParent;
-@property (nonatomic, assign) UIViewController *webViewControllerParent;
+@property (nonatomic, strong) NSString *appId;
+@property (nonatomic, strong) NSString *appKey;
+@property (nonatomic, strong) UIViewController* (^contollerHandler)(void);
 @end
 
 @interface OKSDK : NSObject
@@ -42,5 +41,7 @@ typedef NS_ENUM(NSInteger, OKSDKErrorCode) {
 +(void)shutdown;
 
 +(void)clearAuth;
+
++(NSString*) currentAccessToken;
 
 @end
