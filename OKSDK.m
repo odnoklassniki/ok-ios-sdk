@@ -384,6 +384,13 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     [userDefaults removeObjectForKey:OK_USER_DEFS_ACCESS_TOKEN];
     [userDefaults removeObjectForKey:OK_USER_DEFS_SECRET_KEY];
     
+    NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+    for (NSHTTPCookie *cookie in cookies) {
+        if (NSNotFound != [cookie.domain rangeOfString:@"odnoklassniki.ru"].location || NSNotFound != [cookie.domain rangeOfString:@"ok.ru"].location) {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage]
+             deleteCookie:cookie];
+        }
+    }
 }
 
 @end
