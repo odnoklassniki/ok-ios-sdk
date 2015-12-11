@@ -1,4 +1,4 @@
-###OK IOS SDK 2.0.0
+###OK IOS SDK 2.0.2
 If you are looking for the old version, please checkout tag 1.0
 
 ####How to use
