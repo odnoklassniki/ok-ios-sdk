@@ -1,4 +1,4 @@
-###OK IOS SDK 2.0.0
+###OK IOS SDK 2.0.2
 If you are looking for the old version, please checkout tag 1.0
 
 ####How to use
@@ -23,8 +23,9 @@ Init your sdk in AppDelegate didFinishLaunchingWithOptions
     OKSDKInitSettings *settings = [OKSDKInitSettings new];
     settings.appKey = @"ABCDEFGABCDEGF";
     settings.appId = @"12345";
-    settings.webViewParent = self.window;
-    settings.webViewControllerParent = self.window.rootViewController;
+    settings.controllerHandler = ^{
+        return self.window.rootViewController;
+    };
     [OKSDK initWithSettings: settings];
     return YES;
 }

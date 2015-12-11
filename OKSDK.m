@@ -275,7 +275,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             OKWebViewController *webViewController = [[OKWebViewController alloc] initWithErrorBlock:errorBlock];
-            UIViewController* hostController = self.settings.contollerHandler();
+            UIViewController* hostController = self.settings.controllerHandler();
             [hostController presentViewController:webViewController animated:true completion:nil];
             [webViewController loadUrl: url];
             self.webViewController = webViewController;
@@ -462,6 +462,16 @@ static OKConnection *connection;
 +(void)clearAuth {
     [connection clearAuth];
 }
+
++ (NSString*) currentAccessToken{
+    if (connection){
+        return connection.accessToken;
+    }else{
+        return nil;
+    }
+}
+
+@end
 
 + (NSString*) currentAccessToken{
     if (connection){
