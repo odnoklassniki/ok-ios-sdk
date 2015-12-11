@@ -276,7 +276,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             OKWebViewController *webViewController = [[OKWebViewController alloc] initWithErrorBlock:errorBlock];
-            UIViewController* hostController = self.settings.contollerHandler();
+            UIViewController* hostController = self.settings.controllerHandler();
             [hostController presentViewController:webViewController animated:true completion:nil];
             [webViewController loadUrl: url];
             self.webViewController = webViewController;

@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, OKSDKErrorCode) {
 @interface OKSDKInitSettings: NSObject
 @property (nonatomic, strong) NSString *appId;
 @property (nonatomic, strong) NSString *appKey;
-@property (nonatomic, strong) UIViewController* (^contollerHandler)(void);
+@property (nonatomic, strong) UIViewController* (^controllerHandler)(void);
 @end
 
 @interface OKSDK : NSObject
