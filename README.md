@@ -1,3 +1,5 @@
+Join our chat on the app: Telegram Messenger, https://telegram.me/joinchat/An0xvgHDHvWlSWNQWuzOkQ 
+
 ###OK IOS SDK 2.0.3
 If you are looking for the old version, please checkout tag 1.0
 
