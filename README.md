@@ -3,8 +3,8 @@ Join our chat on the app: Telegram Messenger, https://telegram.me/joinchat/An0xv
 ###OK IOS SDK 2.0.3
 
 [![Join the chat at https://gitter.im/apiok/ok-ios-sdk](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/apiok/ok-ios-sdk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-If you are looking for the old version, please checkout tag 1.0
 
+If you are looking for the old version, please checkout tag 1.0
 ####How to use
 First you should select External and IOS platforms and enable Client OAuth authorization using ok.ru app edit form. 
 Also your should send request for LONG_ACCESS_TOKEN to [api-support](mailto:api-support@ok.ru) or you can simple not request for LONG_ACCESS_TOKEN permission during OAuth authorization.
