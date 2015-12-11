@@ -3,7 +3,7 @@
 #import <UIKit/UIKit.h>
 #import "OKSDK.h"
 
-NSString *const OK_SDK_VERSION = @"2.0.0";
+NSString *const OK_SDK_VERSION = @"2.0.1";
 NSTimeInterval const OK_REQUEST_TIMEOUT = 180.0;
 NSInteger const OK_MAX_CONCURRENT_REQUESTS = 3;
 NSString *const OK_OAUTH_URL = @"https://connect.ok.ru/oauth/authorize";
@@ -163,7 +163,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc]
                                              initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-   
+    
     UIButton *cancelButton = [[UIButton alloc] init];
     [cancelButton.titleLabel setFont:[UIFont systemFontOfSize:30]];
     [cancelButton addTarget:self action:@selector(cancelButtonClicked) forControlEvents:UIControlEventTouchDown];
@@ -196,7 +196,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 - (void)loadUrl:(NSURL *)url {
     [self.webView loadRequest:[NSURLRequest requestWithURL: url cachePolicy:NSURLRequestReloadIgnoringCacheData
-                                                     timeoutInterval: OK_REQUEST_TIMEOUT]];
+                                           timeoutInterval: OK_REQUEST_TIMEOUT]];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -210,7 +210,6 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 }
 
 -(void)cancel {
-    __weak typeof(self) wSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self dismissViewControllerAnimated:true completion:nil];
     });
@@ -384,6 +383,13 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     [userDefaults removeObjectForKey:OK_USER_DEFS_ACCESS_TOKEN];
     [userDefaults removeObjectForKey:OK_USER_DEFS_SECRET_KEY];
     
+    NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+    for (NSHTTPCookie *cookie in cookies) {
+        if (NSNotFound != [cookie.domain rangeOfString:@"odnoklassniki.ru"].location || NSNotFound != [cookie.domain rangeOfString:@"ok.ru"].location) {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage]
+             deleteCookie:cookie];
+        }
+    }
 }
 
 @end
@@ -432,7 +438,7 @@ static OKConnection *connection;
     if(connection && connection.sdkToken) {
         [connection invokeMethod:method arguments:[@{@"sdkToken":connection.sdkToken} ok_union: arguments] session:true signed: true success:successBlock error:errorBlock];
     } else {
-       errorBlock([NSError errorWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:OKSDKErrorCodeNotIntialized userInfo:@{NSLocalizedDescriptionKey: @"OKSDK not initialized you should call initWithAppIdAndAppKey and sdkInit first"}]);
+        errorBlock([NSError errorWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:OKSDKErrorCodeNotIntialized userInfo:@{NSLocalizedDescriptionKey: @"OKSDK not initialized you should call initWithAppIdAndAppKey and sdkInit first"}]);
     }
 }
 
@@ -467,4 +473,12 @@ static OKConnection *connection;
 
 @end
 
++ (NSString*) currentAccessToken{
+    if (connection){
+        return connection.accessToken;
+    }else{
+        return nil;
+    }
+}
 
+@end
