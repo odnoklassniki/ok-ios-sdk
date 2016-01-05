@@ -1,9 +1,11 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <UIKit/UIKit.h>
+#import <SafariServices/SafariServices.h>
 #import "OKSDK.h"
 
-NSString *const OK_SDK_VERSION = @"2.0.3";
+
+NSString *const OK_SDK_VERSION = @"2.0.4";
 NSTimeInterval const OK_REQUEST_TIMEOUT = 180.0;
 NSInteger const OK_MAX_CONCURRENT_REQUESTS = 3;
 NSString *const OK_OAUTH_URL = @"https://connect.ok.ru/oauth/authorize";
@@ -16,6 +18,7 @@ NSString *const OK_SDK_NOT_INIT_COMMON_ERROR = @"OKSDK not initialized you shoul
 //export
 NSString *const OK_API_ERROR_CODE_DOMAIN = @"ru.ok.api";
 NSString *const OK_SDK_ERROR_CODE_DOMAIN = @"ru.ok.sdk";
+
 
 typedef void (^OKCompletitionHander)(id data, NSError *error);
 
@@ -110,6 +113,27 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 @end
 
+@interface OKSFSafariViewController:SFSafariViewController<SFSafariViewControllerDelegate>
+@property(nonatomic,strong) OKErrorBlock errorBlock;
+@end
+
+@implementation OKSFSafariViewController
+- (instancetype)initWithErrorBlock:(OKErrorBlock)errorBlock url:(NSURL *)url {
+    if (self = [super initWithURL:url]) {
+        _errorBlock = errorBlock;
+        self.delegate = self;
+    }
+    return self;
+}
+
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
+    if (self.errorBlock) {
+        self.errorBlock([NSError errorWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:OKSDKErrorCodeCancelledByUser userInfo:@{NSLocalizedDescriptionKey : @"Web view controller cancelled by user"}]);
+    }
+}
+
+@end
+
 @interface OKWebViewController: UIViewController<UIWebViewDelegate,UIBarPositioningDelegate>
 @property(nonatomic,weak) UIActivityIndicatorView *indicator;
 @property(nonatomic,weak) UIWebView *webView;
@@ -131,7 +155,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 @property(nonatomic,copy) NSString *oauthRedirectUri;
 
 @property(nonatomic,strong) NSOperationQueue *queue;
-@property(nonatomic,weak) OKWebViewController *webViewController;
+@property(nonatomic,weak) UIViewController *webViewController;
 
 @property(nonatomic,strong) NSString *accessToken;
 @property(nonatomic,strong) NSString *accessTokenSecretKey;
@@ -144,9 +168,10 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 @implementation OKWebViewController
 
-- (instancetype) initWithErrorBlock: (OKErrorBlock) errorBlock {
+- (instancetype) initWithErrorBlock: (OKErrorBlock) errorBlock url: (NSURL *)url{
     if(self = [super init]) {
         _errorBlock = errorBlock;
+        _currentUrl = url;
     }
     return self;
 }
@@ -177,6 +202,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     [self.view addSubview:(self.webView = webView)];
     [self.view addSubview:(self.indicator = activityView)];
     [webView.scrollView addSubview:(self.cancelButton = cancelButton)];
+    [self loadUrl:self.currentUrl];
 }
 
 - (void)viewWillLayoutSubviews{
@@ -270,22 +296,28 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 }
 -(void)openInWebview:(NSURL *)url success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
     @synchronized(self) {
-        if( [[self.webViewController view] superview]) {
+        if( [[self.webViewController view] superview] ) {
             return errorBlock([OKConnection sdkError:OKSDKErrorCodeUserConfirmationDialogAlreadyInProgress format:@"user confirmation dialog is already in progress"]);
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            OKWebViewController *webViewController = [[OKWebViewController alloc] initWithErrorBlock:errorBlock];
-            UIViewController* hostController = self.settings.controllerHandler();
-            [hostController presentViewController:webViewController animated:true completion:nil];
-            [webViewController loadUrl: url];
-            self.webViewController = webViewController;
+            UIViewController *hostController = self.settings.controllerHandler();
+            UIViewController  *vc;
+            if ([SFSafariViewController class]) {
+                vc = [[OKSFSafariViewController alloc] initWithErrorBlock:errorBlock url:url];
+            } else {
+                vc = [[OKWebViewController alloc] initWithErrorBlock:errorBlock url: url];
+            }
+            [hostController presentViewController:vc animated:true completion:nil];
+            self.webViewController = vc;
         });
     }
 }
 
 
 -(void)openUrl:(NSURL *)url {
-    [self.webViewController cancel];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.webViewController dismissViewControllerAnimated:YES completion:nil];
+    });
     NSString *key = [[url absoluteString] componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"#?"]][0];
     OKCompletitionHander completitionHander = self.completitionHandlers[key];
     if(completitionHander) {
@@ -373,7 +405,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 -(void)shutdown {
     [self.queue cancelAllOperations];
-    [self.webViewController cancel];
+    [self.webViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 -(void)clearAuth {
