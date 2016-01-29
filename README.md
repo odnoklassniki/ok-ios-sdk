@@ -1,6 +1,6 @@
 Join our chat on the app: Telegram Messenger, https://telegram.me/joinchat/An0xvgHDHvWlSWNQWuzOkQ 
 
-###OK IOS SDK 2.0.3
+###OK IOS SDK 2.0.5
 
 [![Join the chat at https://gitter.im/apiok/ok-ios-sdk](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/apiok/ok-ios-sdk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
