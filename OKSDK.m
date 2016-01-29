@@ -384,6 +384,9 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
             }
             return successBlock(result);
         }
+        if([result isKindOfClass:[NSArray class]]) {
+            return successBlock(result);
+        }
         return errorBlock([OKConnection sdkError:OKSDKErrorCodeBadApiReponse format:@"unknown api response: %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]]);
         
     }];
