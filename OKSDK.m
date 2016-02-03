@@ -27,16 +27,16 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 @implementation NSString (OKConnection)
 
--(NSString *) ok_md5 {
+- (NSString *)ok_md5 {
     const char *cStr = [self UTF8String];
     unsigned char digest[CC_MD5_DIGEST_LENGTH];
-    CC_MD5( cStr, strlen(cStr), digest);
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
     NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) [output appendFormat:@"%02x", digest[i]];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) [output appendFormat:@"%02x", digest[i]];
     return  output;
 }
 
--(NSString *) ok_encode {
+- (NSString *)ok_encode {
     static NSMutableCharacterSet *characterSet;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -46,7 +46,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     return [self stringByAddingPercentEncodingWithAllowedCharacters:characterSet];
 }
 
--(NSString *) ok_decode {
+- (NSString *)ok_decode {
     return [self stringByRemovingPercentEncoding];
 }
 
@@ -54,12 +54,12 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 @implementation NSURL (OKConnection)
 
--(NSMutableDictionary *)ok_params {
+- (NSMutableDictionary *)ok_params {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    NSArray *pairs = [(self.fragment?self.fragment:self.query) componentsSeparatedByString:@"&"];
+    NSArray *pairs = [(self.fragment ?: self.query) componentsSeparatedByString:@"&"];
     for (NSString *pair in pairs) {
         NSArray *kv = [pair componentsSeparatedByString:@"="];
-        if(kv.count==2) {
+        if (kv.count == 2) {
             result[[(NSString *)kv[0] ok_decode]]=[kv[1] ok_decode];
         }
     }
@@ -70,7 +70,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 @implementation NSDictionary (OKConnection)
 
--(NSError *)ok_error {
+- (NSError *)ok_error {
     if(self[@"error_code"]) {
         return [[NSError alloc] initWithDomain:OK_API_ERROR_CODE_DOMAIN code:[self[@"error_code"] intValue] userInfo:@{NSLocalizedDescriptionKey: self[@"error_msg"]}];
     }
@@ -80,13 +80,13 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     return nil;
 }
 
--(NSDictionary *)ok_union: (NSDictionary *) dict {
+- (NSDictionary *)ok_union:(NSDictionary *)dict {
     NSMutableDictionary *dictionary =[[NSMutableDictionary alloc] initWithDictionary:self];
     [dictionary setValuesForKeysWithDictionary:dict];
     return dictionary;
 }
 
--(NSString *)ok_queryStringWithSignature:(NSString *)secretKey sigName:(NSString *) sigName{
+- (NSString *)ok_queryStringWithSignature:(NSString *)secretKey sigName:(NSString *)sigName{
     NSMutableString *sigSource = [NSMutableString string];
     NSMutableString *queryString = [NSMutableString string];
     NSArray *sortedKeys = [[self allKeys] sortedArrayUsingSelector: @selector(compare:)];
@@ -100,13 +100,13 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     return queryString;
 }
 
--(NSString *)ok_queryString {
+- (NSString *)ok_queryString {
     NSMutableString *queryString = [NSMutableString string];
     for (NSString *key in self) [queryString appendString:[NSString stringWithFormat:@"%@=%@&", [key ok_encode], [self[key] ok_encode]]];
     return queryString;
 }
 
--(NSString *)ok_json:(NSError *)error {
+- (NSString *)ok_json:(NSError *)error {
     NSData *data = [NSJSONSerialization dataWithJSONObject:self options:0 error:&error ];
     return data?[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]:nil;
 }
@@ -235,7 +235,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     _errorBlock([NSError errorWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:OKSDKErrorCodeCancelledByUser userInfo:@{NSLocalizedDescriptionKey: @"Web view controller cancelled by user"}]);
 }
 
--(void)cancel {
+- (void)cancel {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self dismissViewControllerAnimated:true completion:nil];
     });
@@ -272,7 +272,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 @implementation OKConnection
 
-+(NSError *)sdkError:(NSInteger)code format:(NSString *) format , ... {
++ (NSError *)sdkError:(NSInteger)code format:(NSString *)format, ... {
     va_list args;
     va_start(args, format);
     NSString* error = [[NSString alloc] initWithFormat:format arguments:args];
@@ -280,7 +280,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     return [[NSError alloc] initWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:code userInfo:@{NSLocalizedDescriptionKey: error}];
 }
 
--(instancetype)initWithSettings: (OKSDKInitSettings *) settings {
+- (instancetype)initWithSettings:(OKSDKInitSettings *)settings {
     if(self = [super init]) {
         _settings = settings;
         _queue = [[NSOperationQueue alloc] init];
@@ -294,7 +294,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     }
     return self;
 }
--(void)openInWebview:(NSURL *)url success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
+- (void)openInWebview:(NSURL *)url success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
     @synchronized(self) {
         if( [[self.webViewController view] superview] ) {
             return errorBlock([OKConnection sdkError:OKSDKErrorCodeUserConfirmationDialogAlreadyInProgress format:@"user confirmation dialog is already in progress"]);
@@ -314,7 +314,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 }
 
 
--(void)openUrl:(NSURL *)url {
+- (void)openUrl:(NSURL *)url {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.webViewController dismissViewControllerAnimated:YES completion:nil];
     });
@@ -327,10 +327,11 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     }
 }
 
--(void)authorizeWithPermissions:(NSArray *)permissions success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
-    if(self.accessToken && self.accessTokenSecretKey) {
+- (void)authorizeWithPermissions:(NSArray *)permissions success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
+    if (self.accessToken && self.accessTokenSecretKey) {
         return successBlock(@[self.accessToken, self.accessTokenSecretKey]);
     }
+    
     UIApplication *app = [UIApplication sharedApplication];
     if (![app canOpenURL:[[NSURL alloc] initWithString:self.oauthRedirectUri]]) {
         return errorBlock([OKConnection sdkError:OKSDKErrorCodeNoSchemaRegistered format:@"%@ schema should be registered for current app", self.oauthRedirectUri]);
@@ -358,7 +359,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
         [app openURL:appUrl];
     }
 }
--(void)invokeMethod:(NSString *)method arguments:(NSDictionary *)methodParams session:(bool)sessionMethod signed:(bool)signedMethod success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
+- (void)invokeMethod:(NSString *)method arguments:(NSDictionary *)methodParams session:(bool)sessionMethod signed:(bool)signedMethod success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
     if(!self.accessToken || !self.accessTokenSecretKey) {
         return errorBlock([OKConnection sdkError:OKSDKErrorCodeNotAuthorized format:@"No access_token defined you should invoke authorizeWithPermissions first"]);
     }
@@ -393,7 +394,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     
 }
 
--(void)showWidget:(NSString *)command arguments:(NSDictionary *) arguments options:(NSDictionary *)options success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
+- (void)showWidget:(NSString *)command arguments:(NSDictionary *)arguments options:(NSDictionary *)options success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
     NSString *returnUri = [NSString stringWithFormat:@"ok%@://%@",self.settings.appId, command];
     NSString *widgetUrl = [NSString stringWithFormat:@"%@%@&%@%@",OK_WIDGET_URL,[command ok_encode],[[arguments ok_union: @{@"st.redirect_uri":returnUri}]ok_queryStringWithSignature:self.accessTokenSecretKey sigName:@"st.signature"],[[options ok_union: @{@"st.access_token":self.accessToken,@"st.app":self.settings.appId,@"st.nocancel":@"on"}] ok_queryString]];
     self.completitionHandlers[returnUri] = ^(id data, NSError *error) {
@@ -406,12 +407,12 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     [self openInWebview:[NSURL URLWithString:widgetUrl] success: successBlock error: errorBlock];
 }
 
--(void)shutdown {
+- (void)shutdown {
     [self.queue cancelAllOperations];
     [self.webViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
--(void)clearAuth {
+- (void)clearAuth {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     self.accessToken = nil;
     self.accessTokenSecretKey = nil;
@@ -433,15 +434,15 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 static OKConnection *connection;
 
-+(void)openUrl:(NSURL *)url {
++ (void)openUrl:(NSURL *)url {
     [connection openUrl: url];
 }
 
-+(void)initWithSettings: (OKSDKInitSettings *) settings {
++ (void)initWithSettings:(OKSDKInitSettings *)settings {
     connection = [[OKConnection alloc] initWithSettings: settings];
 }
 
-+(void)authorizeWithPermissions:(NSArray *)permissions success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
++ (void)authorizeWithPermissions:(NSArray *)permissions success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
     if(connection) {
         [connection authorizeWithPermissions:permissions success:successBlock error:errorBlock];
     } else {
@@ -449,7 +450,7 @@ static OKConnection *connection;
     }
 }
 
-+(void)invokeMethod:(NSString *)method arguments:(NSDictionary *)arguments success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
++ (void)invokeMethod:(NSString *)method arguments:(NSDictionary *)arguments success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
     if(connection) {
         [connection invokeMethod:method arguments:arguments session: true signed: true success:successBlock error:errorBlock];
     } else {
@@ -457,11 +458,11 @@ static OKConnection *connection;
     }
 }
 
-+(void)shutdown {
++ (void)shutdown {
     [connection shutdown];
 }
 
-+(void)showWidget:(NSString *)command arguments:(NSDictionary *) arguments options:(NSDictionary *)options success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
++ (void)showWidget:(NSString *)command arguments:(NSDictionary *)arguments options:(NSDictionary *)options success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
     if(connection) {
         [connection showWidget:command arguments:arguments options:options success: successBlock error: errorBlock];
     } else {
@@ -469,7 +470,7 @@ static OKConnection *connection;
     }
 }
 
-+(void)invokeSdkMethod:(NSString *)method arguments:(NSDictionary *)arguments success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
++ (void)invokeSdkMethod:(NSString *)method arguments:(NSDictionary *)arguments success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
     if(connection && connection.sdkToken) {
         [connection invokeMethod:method arguments:[@{@"sdkToken":connection.sdkToken} ok_union: arguments] session:true signed: true success:successBlock error:errorBlock];
     } else {
@@ -477,14 +478,14 @@ static OKConnection *connection;
     }
 }
 
-+(void)sdkInit:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock {
++ (void)sdkInit:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
     NSString *deviceId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     NSError *error;
     NSString *sessionData = [ @{@"version":@"2",@"device_id":deviceId,@"client_type":@"SDK_IOS",@"client_version":OK_SDK_VERSION} ok_json:error];
-    if(error) {
+    if (error) {
         return errorBlock(error);
     }
-    if(connection) {
+    if (connection) {
         [connection invokeMethod:@"sdk.init" arguments:@{@"session_data": sessionData} session: false signed: false success:^(id data) {
             connection.sdkToken = data[@"session_key"];
             successBlock(data);
@@ -494,11 +495,11 @@ static OKConnection *connection;
     }
 }
 
-+(void)clearAuth {
++ (void)clearAuth {
     [connection clearAuth];
 }
 
-+ (NSString*) currentAccessToken{
++ (NSString *)currentAccessToken{
     if (connection){
         return connection.accessToken;
     }else{
