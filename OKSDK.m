@@ -5,7 +5,7 @@
 #import "OKSDK.h"
 
 
-NSString *const OK_SDK_VERSION = @"2.0.4";
+NSString *const OK_SDK_VERSION = @"2.0.6";
 NSTimeInterval const OK_REQUEST_TIMEOUT = 180.0;
 NSInteger const OK_MAX_CONCURRENT_REQUESTS = 3;
 NSString *const OK_OAUTH_URL = @"https://connect.ok.ru/oauth/authorize";
