@@ -307,6 +307,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
             } else {
                 vc = [[OKWebViewController alloc] initWithErrorBlock:errorBlock url: url];
             }
+            vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
             [hostController presentViewController:vc animated:true completion:nil];
             self.webViewController = vc;
         });
