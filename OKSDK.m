@@ -14,7 +14,7 @@ NSString *const OK_API_URL = @"https://api.ok.ru/fb.do?";
 NSString *const OK_OAUTH_APP_URL = @"okauth://authorize";
 NSString *const OK_USER_DEFS_ACCESS_TOKEN = @"ok_access_token";
 NSString *const OK_USER_DEFS_SECRET_KEY = @"ok_secret_key";
-NSString *const OK_SDK_NOT_INIT_COMMON_ERROR = @"OKSDK not initialized you should call initWithAppIdAndAppKey first";
+NSString *const OK_SDK_NOT_INIT_COMMON_ERROR = @"OKSDK not initialized you should call initWithSettings first";
 //export
 NSString *const OK_API_ERROR_CODE_DOMAIN = @"ru.ok.api";
 NSString *const OK_SDK_ERROR_CODE_DOMAIN = @"ru.ok.sdk";
