@@ -34,7 +34,9 @@ typedef NS_ENUM(NSInteger, OKSDKErrorCode) {
 
 +(void)sdkInit:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock;
 
-+(void)openUrl:(NSURL *)url;
++ (void)getInstallSource:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock;
+
++(BOOL)openUrl:(NSURL *)url;
 
 +(void)showWidget:(NSString *)command arguments:(NSDictionary *) arguments options:(NSDictionary *)options success:(OKResultBlock)successBlock error:(OKErrorBlock) errorBlock;
 

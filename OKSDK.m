@@ -1,11 +1,18 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <UIKit/UIKit.h>
-#import <SafariServices/SafariServices.h>
+#import <AdSupport/ASIdentifierManager.h>
 #import "OKSDK.h"
+#ifdef __IPHONE_9_0
+#import <SafariServices/SafariServices.h>
+#endif
 
 
-NSString *const OK_SDK_VERSION = @"2.0.6";
+#define kIOS9x (kIOS8x && [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 9)  // TODO: заменить после перехода на SDK9
+#define kIOS8x (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1)
+#define kIOS7x (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1)
+
+NSString *const OK_SDK_VERSION = @"2.0.7";
 NSTimeInterval const OK_REQUEST_TIMEOUT = 180.0;
 NSInteger const OK_MAX_CONCURRENT_REQUESTS = 3;
 NSString *const OK_OAUTH_URL = @"https://connect.ok.ru/oauth/authorize";
@@ -113,6 +120,8 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 @end
 
+#ifdef __IPHONE_9_0
+
 @interface OKSFSafariViewController:SFSafariViewController<SFSafariViewControllerDelegate>
 @property(nonatomic,strong) OKErrorBlock errorBlock;
 @end
@@ -133,6 +142,8 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 }
 
 @end
+
+#endif
 
 @interface OKWebViewController: UIViewController<UIWebViewDelegate,UIBarPositioningDelegate>
 @property(nonatomic,weak) UIActivityIndicatorView *indicator;
@@ -240,6 +251,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
         [self dismissViewControllerAnimated:true completion:nil];
     });
 }
+
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     self.indicator.center=(CGPoint){self.view.center.x,self.indicator.bounds.size.height * 1.5};
     [self.indicator startAnimating];
@@ -294,6 +306,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     }
     return self;
 }
+
 - (void)openInWebview:(NSURL *)url success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
     @synchronized(self) {
         if( [[self.webViewController view] superview] ) {
@@ -302,13 +315,18 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
         dispatch_async(dispatch_get_main_queue(), ^{
             UIViewController *hostController = self.settings.controllerHandler();
             UIViewController  *vc;
-            if ([SFSafariViewController class]) {
+#ifdef __IPHONE_9_0
+            if (kIOS9x) {
                 vc = [[OKSFSafariViewController alloc] initWithErrorBlock:errorBlock url:url];
             } else {
                 vc = [[OKWebViewController alloc] initWithErrorBlock:errorBlock url: url];
             }
-            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+#else
+            vc = [[OKWebViewController alloc] initWithErrorBlock:errorBlock url:url];
+#endif
+            if (kIOS8x) {
                 vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+            }
             [hostController presentViewController:vc animated:true completion:nil];
             self.webViewController = vc;
         });
@@ -316,17 +334,24 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 }
 
 
-- (void)openUrl:(NSURL *)url {
+- (BOOL)openUrl:(NSURL *)url {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.webViewController dismissViewControllerAnimated:YES completion:nil];
     });
     NSString *key = [[url absoluteString] componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"#?"]][0];
     OKCompletitionHander completitionHander = self.completitionHandlers[key];
+    NSDictionary *answer = [url ok_params];
     if(completitionHander) {
         [self.completitionHandlers removeObjectForKey:key];
-        NSDictionary *answer = [url ok_params];
-        return completitionHander(answer, [answer ok_error]);
+        completitionHander(answer, [answer ok_error]);
+        return YES;
+    } else if([key isEqualToString:self.oauthRedirectUri]) {
+        if (![answer ok_error]) {
+            [self saveTokens:answer];
+        }
+        return YES;
     }
+    return NO;
 }
 
 - (void)authorizeWithPermissions:(NSArray *)permissions success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
@@ -345,9 +370,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
         if(error) {
             errorBlock(error);
         } else {
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            [userDefaults setObject: (wSelf.accessToken = data[@"access_token"]) forKey:OK_USER_DEFS_ACCESS_TOKEN];
-            [userDefaults setObject: (wSelf.accessTokenSecretKey = data[@"session_secret_key"]) forKey:OK_USER_DEFS_SECRET_KEY];
+            [wSelf saveTokens:data];
             if(wSelf.accessToken || wSelf.accessTokenSecretKey) {
                 successBlock(@[wSelf.accessToken, wSelf.accessTokenSecretKey]);
             } else {
@@ -361,6 +384,14 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
         [app openURL:appUrl];
     }
 }
+
+- (void)saveTokens:(NSDictionary *)data {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:(self.accessToken = data[@"access_token"]) forKey:OK_USER_DEFS_ACCESS_TOKEN];
+    [userDefaults setObject:(self.accessTokenSecretKey = data[@"session_secret_key"]) forKey:OK_USER_DEFS_SECRET_KEY];
+    [userDefaults synchronize];
+}
+
 - (void)invokeMethod:(NSString *)method arguments:(NSDictionary *)methodParams session:(bool)sessionMethod signed:(bool)signedMethod success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
     if(!self.accessToken || !self.accessTokenSecretKey) {
         return errorBlock([OKConnection sdkError:OKSDKErrorCodeNotAuthorized format:@"No access_token defined you should invoke authorizeWithPermissions first"]);
@@ -436,8 +467,8 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 static OKConnection *connection;
 
-+ (void)openUrl:(NSURL *)url {
-    [connection openUrl: url];
++ (BOOL)openUrl:(NSURL *)url {
+    return [connection openUrl:url];
 }
 
 + (void)initWithSettings:(OKSDKInitSettings *)settings {
@@ -480,8 +511,12 @@ static OKConnection *connection;
     }
 }
 
+
+
+
+
 + (void)sdkInit:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
-    NSString *deviceId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSString *deviceId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
     NSError *error;
     NSString *sessionData = [ @{@"version":@"2",@"device_id":deviceId,@"client_type":@"SDK_IOS",@"client_version":OK_SDK_VERSION} ok_json:error];
     if (error) {
@@ -496,6 +531,18 @@ static OKConnection *connection;
         errorBlock([NSError errorWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:OKSDKErrorCodeNotIntialized userInfo:@{NSLocalizedDescriptionKey: OK_SDK_NOT_INIT_COMMON_ERROR}]);
     }
 }
+
++ (void)getInstallSource:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
+    NSString *deviceId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    if (connection) {
+        [connection invokeMethod:@"sdk.getInstallSource" arguments:@{@"adv_id" : deviceId} session:false signed:false success:^(id data) {
+            successBlock(data);
+        } error:errorBlock];
+    } else {
+        errorBlock([NSError errorWithDomain:OK_SDK_ERROR_CODE_DOMAIN code:OKSDKErrorCodeNotIntialized userInfo:@{NSLocalizedDescriptionKey : OK_SDK_NOT_INIT_COMMON_ERROR}]);
+    }
+}
+
 
 + (void)clearAuth {
     [connection clearAuth];
