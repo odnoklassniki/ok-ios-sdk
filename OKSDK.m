@@ -393,7 +393,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 }
 
 - (void)invokeMethod:(NSString *)method arguments:(NSDictionary *)methodParams session:(bool)sessionMethod signed:(bool)signedMethod success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
-    if(!self.accessToken || !self.accessTokenSecretKey) {
+    if((!self.accessToken && sessionMethod) || (!self.accessTokenSecretKey && signedMethod)) {
         return errorBlock([OKConnection sdkError:OKSDKErrorCodeNotAuthorized format:@"No access_token defined you should invoke authorizeWithPermissions first"]);
     }
     NSMutableDictionary *arguments = [[NSMutableDictionary alloc] initWithDictionary:methodParams];
@@ -408,7 +408,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
             return errorBlock(error);
         }
         NSError *jsonParsingError = nil;
-        id result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
+        id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonParsingError];
         if(jsonParsingError) {
             return errorBlock(error);
         }
@@ -419,6 +419,12 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
             return successBlock(result);
         }
         if([result isKindOfClass:[NSArray class]]) {
+            return successBlock(result);
+        }
+        if([result isKindOfClass:[NSNumber class]]) {
+            return successBlock(result);
+        }
+        if([result isKindOfClass:[NSString class]]) {
             return successBlock(result);
         }
         return errorBlock([OKConnection sdkError:OKSDKErrorCodeBadApiReponse format:@"unknown api response: %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]]);
