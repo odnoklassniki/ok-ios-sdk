@@ -75,6 +75,26 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 
 @end
 
+@implementation NSBundle (CFBundleURLTypes)
+
++ (BOOL)ok_hasRegisteredURLScheme:(NSString *)URLScheme {
+    static dispatch_once_t onceToken;
+    static NSArray *URLTypes;
+    dispatch_once(&onceToken, ^{
+        URLTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
+    });
+    
+    for (NSDictionary *URLType in URLTypes) {
+        NSArray *URLSchemes = [URLType valueForKey:@"CFBundleURLSchemes"];
+        if ([URLSchemes containsObject:URLScheme]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+@end
+
 @implementation NSDictionary (OKConnection)
 
 - (NSError *)ok_error {
@@ -163,6 +183,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 @interface OKConnection : NSObject
 
 @property(nonatomic,strong) OKSDKInitSettings *settings;
+@property(nonatomic,copy) NSString *oauthRedirectScheme;
 @property(nonatomic,copy) NSString *oauthRedirectUri;
 
 @property(nonatomic,strong) NSOperationQueue *queue;
@@ -298,7 +319,8 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
         _queue = [[NSOperationQueue alloc] init];
         _queue.name = @"OK-API-Requests";
         _queue.maxConcurrentOperationCount = OK_MAX_CONCURRENT_REQUESTS;
-        _oauthRedirectUri = [NSString stringWithFormat:@"ok%@://authorize", settings.appId];
+        _oauthRedirectScheme = [NSString stringWithFormat:@"ok%@", _settings.appId];
+        _oauthRedirectUri = [NSString stringWithFormat:@"%@://authorize", _oauthRedirectScheme];
         _completitionHandlers = [NSMutableDictionary new];
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         _accessToken = [userDefaults objectForKey:OK_USER_DEFS_ACCESS_TOKEN];
@@ -360,7 +382,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     }
     
     UIApplication *app = [UIApplication sharedApplication];
-    if (![app canOpenURL:[[NSURL alloc] initWithString:self.oauthRedirectUri]]) {
+    if (![NSBundle ok_hasRegisteredURLScheme:self.oauthRedirectScheme]) {
         return errorBlock([OKConnection sdkError:OKSDKErrorCodeNoSchemaRegistered format:@"%@ schema should be registered for current app", self.oauthRedirectUri]);
     }
     NSString *queryString = [@{@"response_type":@"token",@"client_id":self.settings.appId,@"redirect_uri":[self.oauthRedirectUri ok_encode],@"layout":@"a",@"scope":[[permissions componentsJoinedByString:@";"] ok_encode]} ok_queryString];
