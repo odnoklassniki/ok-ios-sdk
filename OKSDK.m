@@ -196,10 +196,10 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     webView.backgroundColor = [UIColor whiteColor];
     webView.opaque = NO;
     webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
+
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc]
                                              initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    
+
     UIButton *cancelButton = [[UIButton alloc] init];
     [cancelButton.titleLabel setFont:[UIFont systemFontOfSize:30]];
     [cancelButton addTarget:self action:@selector(cancelButtonClicked) forControlEvents:UIControlEventTouchDown];
@@ -209,7 +209,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     cancelButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     cancelButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     [cancelButton setTitle:@"\u2715" forState:UIControlStateNormal];
-    
+
     [self.view addSubview:(self.webView = webView)];
     [self.view addSubview:(self.indicator = activityView)];
     [webView.scrollView addSubview:(self.cancelButton = cancelButton)];
@@ -358,7 +358,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     if (self.accessToken && self.accessTokenSecretKey) {
         return successBlock(@[self.accessToken, self.accessTokenSecretKey]);
     }
-    
+
     UIApplication *app = [UIApplication sharedApplication];
     if (![app canOpenURL:[[NSURL alloc] initWithString:self.oauthRedirectUri]]) {
         return errorBlock([OKConnection sdkError:OKSDKErrorCodeNoSchemaRegistered format:@"%@ schema should be registered for current app", self.oauthRedirectUri]);
@@ -428,9 +428,9 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
             return successBlock(result);
         }
         return errorBlock([OKConnection sdkError:OKSDKErrorCodeBadApiReponse format:@"unknown api response: %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]]);
-        
+
     }];
-    
+
 }
 
 - (void)showWidget:(NSString *)command arguments:(NSDictionary *)arguments options:(NSDictionary *)options success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
@@ -457,7 +457,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     self.accessTokenSecretKey = nil;
     [userDefaults removeObjectForKey:OK_USER_DEFS_ACCESS_TOKEN];
     [userDefaults removeObjectForKey:OK_USER_DEFS_SECRET_KEY];
-    
+
     NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
     for (NSHTTPCookie *cookie in cookies) {
         if (NSNotFound != [cookie.domain rangeOfString:@"odnoklassniki.ru"].location || NSNotFound != [cookie.domain rangeOfString:@"ok.ru"].location) {
@@ -557,6 +557,14 @@ static OKConnection *connection;
 + (NSString *)currentAccessToken{
     if (connection){
         return connection.accessToken;
+    }else{
+        return nil;
+    }
+}
+
++ (NSString *)currentAccessTokenSecretKey{
+    if (connection){
+        return connection.accessTokenSecretKey;
     }else{
         return nil;
     }

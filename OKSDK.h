@@ -46,4 +46,6 @@ typedef NS_ENUM(NSInteger, OKSDKErrorCode) {
 
 +(NSString*) currentAccessToken;
 
++(NSString*) currentAccessTokenSecretKey;
+
 @end
