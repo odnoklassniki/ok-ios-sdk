@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ok-ios-sdk"
-  s.version      = "2.0.12"
+  s.version      = "2.0.13"
   s.summary      = "iOS library for working with OK API."
   s.homepage     = "https://github.com/apiok/ok-ios-sdk"
   s.license      = { :type => "MIT", :file => "LICENSE" }
