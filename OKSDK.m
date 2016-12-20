@@ -9,7 +9,7 @@
 
 #define kIOS9x ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0f)  // TODO: заменить после перехода на SDK9
 
-NSString *const OK_SDK_VERSION = @"2.0.12";
+NSString *const OK_SDK_VERSION = @"2.0.14";
 NSTimeInterval const OK_REQUEST_TIMEOUT = 180.0;
 NSInteger const OK_MAX_CONCURRENT_REQUESTS = 3;
 NSString *const OK_OAUTH_URL = @"https://connect.ok.ru/oauth/authorize";
