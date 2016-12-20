@@ -7,8 +7,7 @@
 #import <SafariServices/SafariServices.h>
 #endif
 
-
-#define kIOS9x ([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 9)  // TODO: заменить после перехода на SDK9
+#define kIOS9x ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0f)  // TODO: заменить после перехода на SDK9
 
 NSString *const OK_SDK_VERSION = @"2.0.12";
 NSTimeInterval const OK_REQUEST_TIMEOUT = 180.0;
