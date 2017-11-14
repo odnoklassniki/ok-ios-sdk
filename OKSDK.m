@@ -169,7 +169,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 @property(nonatomic,copy) NSString *oauthRedirectScheme;
 @property(nonatomic,copy) NSString *oauthRedirectUri;
 
-@property(nonatomic,strong) NSOperationQueue *queue;
+@property(nonatomic,strong) NSURLSession *urlSession;
 @property(nonatomic,weak) UIViewController *safariVC;
 
 @property(nonatomic,strong) NSString *accessToken;
@@ -193,9 +193,14 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 - (instancetype)initWithSettings:(OKSDKInitSettings *)settings {
     if(self = [super init]) {
         _settings = settings;
-        _queue = [[NSOperationQueue alloc] init];
-        _queue.name = @"OK-API-Requests";
-        _queue.maxConcurrentOperationCount = OK_MAX_CONCURRENT_REQUESTS;
+        
+        NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+        queue.name = @"OK-API-Requests";
+        queue.maxConcurrentOperationCount = OK_MAX_CONCURRENT_REQUESTS;
+        
+        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:nil delegateQueue:queue];
+        
         _oauthRedirectScheme = [NSString stringWithFormat:@"ok%@", _settings.appId];
         _oauthRedirectUri = [NSString stringWithFormat:@"%@://authorize", _oauthRedirectScheme];
         _completitionHandlers = [NSMutableDictionary new];
@@ -298,10 +303,12 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
     NSMutableURLRequest *request = [NSMutableURLRequest
                                     requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:OK_REQUEST_TIMEOUT];
     [request setValue:[NSString stringWithFormat:@"OK-IOS-SDK  %@",OK_SDK_VERSION] forHTTPHeaderField:@"User-Agent"];
-    [NSURLConnection sendAsynchronousRequest:request queue:self.queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+    [[self.urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
         if (error) {
             return errorBlock(error);
         }
+        
         NSError *jsonParsingError = nil;
         id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonParsingError];
         if(jsonParsingError) {
@@ -323,9 +330,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
             return successBlock(result);
         }
         return errorBlock([OKConnection sdkError:OKSDKErrorCodeBadApiReponse format:@"unknown api response: %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]]);
-
-    }];
-
+    }] resume];
 }
 
 - (void)showWidget:(NSString *)command arguments:(NSDictionary *)arguments options:(NSDictionary *)options success:(OKResultBlock)successBlock error:(OKErrorBlock)errorBlock {
@@ -342,7 +347,7 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
 }
 
 - (void)shutdown {
-    [self.queue cancelAllOperations];
+    [self.urlSession invalidateAndCancel];
     [self.safariVC dismissViewControllerAnimated:NO completion:nil];
 }
 
@@ -360,6 +365,10 @@ typedef void (^OKCompletitionHander)(id data, NSError *error);
              deleteCookie:cookie];
         }
     }
+}
+
+-(void) dealloc {
+    [self.urlSession invalidateAndCancel];
 }
 
 @end
